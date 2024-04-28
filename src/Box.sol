@@ -16,9 +16,7 @@ contract Box is Ownable {
      */
     event NumberChanged(uint256 number);
 
-    constructor() Ownable(msg.sender){
-        
-    }
+    constructor() Ownable(msg.sender) {}
 
     /**
      * @dev Stores a new number in the contract.

@@ -12,15 +12,26 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
-contract FinGovernor is Initializable, GovernorUpgradeable, GovernorSettingsUpgradeable, GovernorCountingSimpleUpgradeable, GovernorStorageUpgradeable, GovernorVotesUpgradeable, GovernorVotesQuorumFractionUpgradeable, GovernorTimelockControlUpgradeable, OwnableUpgradeable, UUPSUpgradeable {
-
+contract FinGovernor is
+    Initializable,
+    GovernorUpgradeable,
+    GovernorSettingsUpgradeable,
+    GovernorCountingSimpleUpgradeable,
+    GovernorStorageUpgradeable,
+    GovernorVotesUpgradeable,
+    GovernorVotesQuorumFractionUpgradeable,
+    GovernorTimelockControlUpgradeable,
+    OwnableUpgradeable,
+    UUPSUpgradeable
+{
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
     function initialize(IVotes _token, TimelockControllerUpgradeable _timelock, address initialOwner)
-        initializer public
+        public
+        initializer
     {
         __Governor_init("FinGovernor");
         __GovernorSettings_init(1, /* 1 block */ 50400, /* 1 week */ 0);
@@ -33,11 +44,7 @@ contract FinGovernor is Initializable, GovernorUpgradeable, GovernorSettingsUpgr
         __UUPSUpgradeable_init();
     }
 
-    function _authorizeUpgrade(address newImplementation)
-        internal
-        onlyOwner
-        override
-    {}
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     /*
     ==============================
@@ -45,21 +52,11 @@ contract FinGovernor is Initializable, GovernorUpgradeable, GovernorSettingsUpgr
     ==============================
     */
 
-    function votingDelay()
-        public
-        view
-        override(GovernorUpgradeable, GovernorSettingsUpgradeable)
-        returns (uint256)
-    {
+    function votingDelay() public view override(GovernorUpgradeable, GovernorSettingsUpgradeable) returns (uint256) {
         return super.votingDelay();
     }
 
-    function votingPeriod()
-        public
-        view
-        override(GovernorUpgradeable, GovernorSettingsUpgradeable)
-        returns (uint256)
-    {
+    function votingPeriod() public view override(GovernorUpgradeable, GovernorSettingsUpgradeable) returns (uint256) {
         return super.votingPeriod();
     }
 
@@ -99,34 +96,42 @@ contract FinGovernor is Initializable, GovernorUpgradeable, GovernorSettingsUpgr
         return super.proposalThreshold();
     }
 
-    function _propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description, address proposer)
-        internal
-        override(GovernorUpgradeable, GovernorStorageUpgradeable)
-        returns (uint256)
-    {
+    function _propose(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        string memory description,
+        address proposer
+    ) internal override(GovernorUpgradeable, GovernorStorageUpgradeable) returns (uint256) {
         return super._propose(targets, values, calldatas, description, proposer);
     }
 
-    function _queueOperations(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-        internal
-        override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
-        returns (uint48)
-    {
+    function _queueOperations(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(GovernorUpgradeable, GovernorTimelockControlUpgradeable) returns (uint48) {
         return super._queueOperations(proposalId, targets, values, calldatas, descriptionHash);
     }
 
-    function _executeOperations(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-        internal
-        override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
-    {
+    function _executeOperations(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(GovernorUpgradeable, GovernorTimelockControlUpgradeable) {
         super._executeOperations(proposalId, targets, values, calldatas, descriptionHash);
     }
 
-    function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-        internal
-        override(GovernorUpgradeable, GovernorTimelockControlUpgradeable)
-        returns (uint256)
-    {
+    function _cancel(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(GovernorUpgradeable, GovernorTimelockControlUpgradeable) returns (uint256) {
         return super._cancel(targets, values, calldatas, descriptionHash);
     }
 

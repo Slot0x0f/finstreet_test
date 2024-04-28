@@ -1,13 +1,13 @@
-## Foundry
+## FinStreet Blockchain Developer Test
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**This is a repository with the code for an upgradeable governance contract as specified by the FinStreet Hiring Test**
 
-Foundry consists of:
+This repo consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+-   **FinGovernor.sol**: The governance contract inheriting the state of the art OZ Governorupgradeable.
+-   **FinGovToken.sol**: This is a ERC20Votes token that is used to see the votes an account has during the given time.
+-   **FinTimeLock.sol**: This is the timelock contract that will make sure there is some delay before the proposal is executed.
+-   **Box.sol**: This is an example contract that can be changed via the proposal (Since the proposal can use arbitrary address and calldata it can be used to call various types of contracts).
 
 ## Documentation
 
@@ -18,6 +18,7 @@ https://book.getfoundry.sh/
 ### Build
 
 ```shell
+$ forge install
 $ forge build
 ```
 
@@ -31,36 +32,4 @@ $ forge test
 
 ```shell
 $ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
 ```

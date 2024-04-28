@@ -8,17 +8,17 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
  * @title TimeLock
  * @dev This contract extends the OpenZeppelin TimelockController contract and adds additional functionality for specifying proposers and executors.
  */
-contract FinTimeLock is Initializable, TimelockControllerUpgradeable {
 
+contract FinTimeLock is Initializable, TimelockControllerUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
     }
 
-   function initialize(uint256 minDelay, address[] memory proposers, address[] memory executors, address admin)
-        initializer public
+    function initialize(uint256 minDelay, address[] memory proposers, address[] memory executors, address admin)
+        public
+        initializer
     {
-        __TimelockController_init(minDelay,  proposers,  executors,  admin);
+        __TimelockController_init(minDelay, proposers, executors, admin);
     }
-
 }

@@ -10,7 +10,6 @@ import {console} from "forge-std/console.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades/Upgrades.sol";
 
 contract FinGovernorTest is Test {
-    
     FinGovToken token;
     FinTimeLock timelock;
     FinGovernor governor;
@@ -32,7 +31,6 @@ contract FinGovernorTest is Test {
     address public constant INITIAL_OWNER = address(2);
 
     function setUp() public {
-
         token = new FinGovToken();
         token.mint(VOTER, 100e18);
 
@@ -41,17 +39,20 @@ contract FinGovernorTest is Test {
 
         //timelock = new TimeLock(MIN_DELAY, proposers, executors);
 
-        address payable proxyTimelock = payable (Upgrades.deployUUPSProxy(
-        "FinTimeLock.sol",
-        abi.encodeCall(FinTimeLock.initialize, (MIN_DELAY, proposers, executors, address(this)))
-        ));
+        address payable proxyTimelock = payable(
+            Upgrades.deployUUPSProxy(
+                "FinTimeLock.sol",
+                abi.encodeCall(FinTimeLock.initialize, (MIN_DELAY, proposers, executors, address(this)))
+            )
+        );
 
         timelock = FinTimeLock(proxyTimelock);
-    
-        address payable proxy = payable (Upgrades.deployUUPSProxy(
-        "FinGovernor.sol",
-        abi.encodeCall(FinGovernor.initialize, (token,timelock,INITIAL_OWNER))
-        ));
+
+        address payable proxy = payable(
+            Upgrades.deployUUPSProxy(
+                "FinGovernor.sol", abi.encodeCall(FinGovernor.initialize, (token, timelock, INITIAL_OWNER))
+            )
+        );
 
         governor = FinGovernor(proxy);
 
@@ -93,7 +94,6 @@ contract FinGovernorTest is Test {
         // 0 = Against, 1 = For, 2 = Abstain for this example
         uint8 voteWay = 1;
 
-
         vm.prank(VOTER);
         governor.castVoteWithReason(proposalId, voteWay, reason);
 
@@ -113,7 +113,6 @@ contract FinGovernorTest is Test {
 
         assert(box.getNumber() == valueToStore);
     }
-
 
     function testCantUpdateBoxWithoutGovernance() public {
         vm.expectRevert();
