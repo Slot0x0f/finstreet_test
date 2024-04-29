@@ -42,3 +42,7 @@ Fingovtoken : 0x91Ce6fEC501fc5e2dA8Ed6cB85603906ea4cd21F
 FinTimeLock: 0xd0A5fc1905D65775D43daACC99CFeaCe6b824c8c
 
 FinGovernor: 0x50c40C1C3e2265995601da446CD2b7Cf05146c66
+
+ **Document explaining the requirements fulfilled:**
+
+https://docs.google.com/document/d/1GVSRDjbJYef9n-GmzjL9PBdBDPqRDXyxeMkNY_L7lM4/edit?usp=sharing
