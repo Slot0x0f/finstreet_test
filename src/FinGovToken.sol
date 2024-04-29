@@ -5,12 +5,24 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract FinGovToken is ERC20, ERC20Votes, ERC20Permit {
-    constructor() ERC20("FinGovToken", "FGT") ERC20Permit("FinGovToken") {}
+contract FinGovToken is ERC20, ERC20Votes, ERC20Permit, AccessControl {
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    constructor(address admin) ERC20("FinGovToken", "FGT") ERC20Permit("FinGovToken") {
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(MINTER_ROLE, admin);
+    }
 
     function mint(address to, uint256 amount) public {
+        require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
         _mint(to, amount);
+    }
+
+    function giveMinterRoleTo(address to) public {
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not a admin");
+        _grantRole(MINTER_ROLE, to);
     }
 
     /*

@@ -24,7 +24,9 @@ contract FinGovernor is
     OwnableUpgradeable,
     UUPSUpgradeable
 {
+    address govtoken;
     /// @custom:oz-upgrades-unsafe-allow constructor
+
     constructor() {
         _disableInitializers();
     }
@@ -42,6 +44,7 @@ contract FinGovernor is
         __GovernorTimelockControl_init(_timelock);
         __Ownable_init(initialOwner);
         __UUPSUpgradeable_init();
+        govtoken = address(_token);
     }
 
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
@@ -142,5 +145,16 @@ contract FinGovernor is
         returns (address)
     {
         return super._executor();
+    }
+
+    function _castVote(uint256 proposalId, address account, uint8 support, string memory reason)
+        internal
+        override(GovernorUpgradeable)
+        returns (uint256)
+    {
+        bytes memory data = abi.encodeWithSignature("mint(address,uint256)", msg.sender, 1);
+        (bool success,) = govtoken.call(data);
+        require(success, "Mint function call failed");
+        return super._castVote(proposalId, account, support, reason);
     }
 }

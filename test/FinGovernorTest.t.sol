@@ -8,6 +8,7 @@ import {FinTimeLock} from "../src/FinTimeLock.sol";
 import {Box} from "../src/Box.sol";
 import {console} from "forge-std/console.sol";
 import {Upgrades} from "openzeppelin-foundry-upgrades/Upgrades.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract FinGovernorTest is Test {
     FinGovToken token;
@@ -31,7 +32,7 @@ contract FinGovernorTest is Test {
     address public constant INITIAL_OWNER = address(2);
 
     function setUp() public {
-        token = new FinGovToken();
+        token = new FinGovToken(address(this));
         token.mint(VOTER, 100e18);
 
         vm.prank(VOTER);
@@ -56,21 +57,20 @@ contract FinGovernorTest is Test {
 
         governor = FinGovernor(proxy);
 
+        token.giveMinterRoleTo(proxy);
+
         bytes32 proposerRole = timelock.PROPOSER_ROLE();
         bytes32 executorRole = timelock.EXECUTOR_ROLE();
-        //bytes32 adminRole = timelock.TIMELOCK_ADMIN_ROLE();
 
         timelock.grantRole(proposerRole, address(governor));
         timelock.grantRole(executorRole, address(0));
-        //timelock.revokeRole(adminRole, msg.sender);
 
         box = new Box();
         box.transferOwnership(address(timelock));
     }
 
-    function testGovernanceUpdatesBox(uint256 value) public {
+    function testGovernanceUpdatesBox(uint256 value, string memory description) public {
         uint256 valueToStore = value;
-        string memory description = "Store 1 in Box";
         bytes memory encodedFunctionCall = abi.encodeWithSignature("store(uint256)", valueToStore);
         addressesToCall.push(address(box));
         values.push(0);
@@ -91,7 +91,7 @@ contract FinGovernorTest is Test {
 
         // 2. Vote
         string memory reason = "I like the number";
-        // 0 = Against, 1 = For, 2 = Abstain for this example
+  
         uint8 voteWay = 1;
 
         vm.prank(VOTER);
@@ -112,6 +112,45 @@ contract FinGovernorTest is Test {
         governor.execute(addressesToCall, values, functionCalls, descriptionHash);
 
         assert(box.getNumber() == valueToStore);
+    }
+
+
+    function testVoterGetsTokenForVoting(uint256 value, string memory description) public {
+        uint256 valueToStore = value;
+        bytes memory encodedFunctionCall = abi.encodeWithSignature("store(uint256)", valueToStore);
+        addressesToCall.push(address(box));
+        values.push(0);
+        functionCalls.push(encodedFunctionCall);
+
+        // 1. Propose to the DAO
+        uint256 proposalId = governor.propose(addressesToCall, values, functionCalls, description);
+
+        console.log("Proposal ID is:", proposalId);
+        console.log("Proposal State:", uint256(governor.state(proposalId)));
+        governor.proposalSnapshot(proposalId);
+        governor.proposalDeadline(proposalId);
+
+        vm.warp(block.timestamp + VOTING_DELAY + 1);
+        vm.roll(block.number + VOTING_DELAY + 1);
+
+        console.log("Proposal State:", uint256(governor.state(proposalId)));
+
+        // 2. Vote
+        string memory reason = "I like the number";
+  
+        uint8 voteWay = 1;
+
+        uint256 balanceOfVoterBefore = IERC20(address(token)).balanceOf(VOTER);
+
+        vm.prank(VOTER);
+        governor.castVoteWithReason(proposalId, voteWay, reason);
+
+        vm.warp(block.timestamp + VOTING_PERIOD + 1);
+        vm.roll(block.number + VOTING_PERIOD + 1);
+
+        uint256 balanceOfVoterAfter = IERC20(address(token)).balanceOf(VOTER);
+
+        assertGt(balanceOfVoterAfter, balanceOfVoterBefore);
     }
 
     function testCantUpdateBoxWithoutGovernance() public {
