@@ -15,11 +15,20 @@ contract FinGovToken is ERC20, ERC20Votes, ERC20Permit, AccessControl {
         _grantRole(MINTER_ROLE, admin);
     }
 
+    /*
+    ==============================
+    ====== Public Functions ======
+    ==============================
+    */
+
+    /// @param to This address to mint the token to
+    /// @param amount The ammount to mint
     function mint(address to, uint256 amount) public {
         require(hasRole(MINTER_ROLE, msg.sender), "Caller is not a minter");
         _mint(to, amount);
     }
 
+    /// @param to This address to give the role to
     function giveMinterRoleTo(address to) public {
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not a admin");
         _grantRole(MINTER_ROLE, to);
@@ -31,10 +40,15 @@ contract FinGovToken is ERC20, ERC20Votes, ERC20Permit, AccessControl {
     ==============================
     */
 
+    /// @notice This is used to update balances
+    /// @param from The address the balance change is coming from
+    /// @param to This address the balance change is going too
+    /// @param amount The amount changed
     function _update(address from, address to, uint256 amount) internal override(ERC20, ERC20Votes) {
         super._update(from, to, amount);
     }
 
+    /// @param owner This is an address given to the Nonces contract to keep track of the nonce of the given address
     function nonces(address owner) public view override(ERC20Permit, Nonces) returns (uint256) {
         return super.nonces(owner);
     }

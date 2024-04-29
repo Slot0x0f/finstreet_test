@@ -15,6 +15,11 @@ contract FinTimeLock is Initializable, TimelockControllerUpgradeable {
         _disableInitializers();
     }
 
+
+    /// @param minDelay The minimum delay before a proposal is executed
+    /// @param proposers The addresses that can be proposers 
+    /// @param executors The addresses that can execute the proposals
+    /// @param admin The admin account address
     function initialize(uint256 minDelay, address[] memory proposers, address[] memory executors, address admin)
         public
         initializer

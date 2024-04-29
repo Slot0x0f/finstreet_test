@@ -31,6 +31,10 @@ contract FinGovernor is
         _disableInitializers();
     }
 
+    /// @notice This is the iniatizer function for the governor
+    /// @param _token This is the ERC20votes governance token
+    /// @param _timelock This is the timelock controller for the governance contract
+    /// @param initialOwner The initial owner of the contract
     function initialize(IVotes _token, TimelockControllerUpgradeable _timelock, address initialOwner)
         public
         initializer
@@ -63,6 +67,8 @@ contract FinGovernor is
         return super.votingPeriod();
     }
 
+    /// @param blockNumber This is to check quorom for a given block number
+    /// @return A uint256 for the quorum
     function quorum(uint256 blockNumber)
         public
         view
@@ -72,6 +78,8 @@ contract FinGovernor is
         return super.quorum(blockNumber);
     }
 
+    /// @param proposalId This the ID of a proposal in governance
+    /// @return Returns the current state a proposal is at
     function state(uint256 proposalId)
         public
         view
@@ -81,6 +89,8 @@ contract FinGovernor is
         return super.state(proposalId);
     }
 
+    /// @param proposalId This the ID of a proposal in governance
+    /// @return Returns a bool about of the proposal needs to be queued
     function proposalNeedsQueuing(uint256 proposalId)
         public
         view
@@ -99,6 +109,11 @@ contract FinGovernor is
         return super.proposalThreshold();
     }
 
+    /// @param targets The target contracts to call
+    /// @param values The gas/eth value sent with each call
+    /// @param calldatas The call data used to call an address with function selector and params
+    /// @param description The description of the proposal
+    /// @param proposer The address of the proper
     function _propose(
         address[] memory targets,
         uint256[] memory values,
@@ -109,6 +124,11 @@ contract FinGovernor is
         return super._propose(targets, values, calldatas, description, proposer);
     }
 
+    /// @param proposalId The Id of a proposal
+    /// @param targets The target contracts to call
+    /// @param values The gas/eth value sent with each call
+    /// @param calldatas The call data used to call an address with function selector and params
+    /// @param descriptionHash The hash of the description of the proposal
     function _queueOperations(
         uint256 proposalId,
         address[] memory targets,
@@ -119,6 +139,11 @@ contract FinGovernor is
         return super._queueOperations(proposalId, targets, values, calldatas, descriptionHash);
     }
 
+    /// @param proposalId The Id of a proposal
+    /// @param targets The target contracts to call
+    /// @param values The gas/eth value sent with each call
+    /// @param calldatas The call data used to call an address with function selector and params
+    /// @param descriptionHash The hash of the description of the proposal
     function _executeOperations(
         uint256 proposalId,
         address[] memory targets,
@@ -129,6 +154,10 @@ contract FinGovernor is
         super._executeOperations(proposalId, targets, values, calldatas, descriptionHash);
     }
 
+    /// @param targets The target contracts to call
+    /// @param values The gas/eth value sent with each call
+    /// @param calldatas The call data used to call an address with function selector and params
+    /// @param descriptionHash The hash of the description of the proposal
     function _cancel(
         address[] memory targets,
         uint256[] memory values,
@@ -147,6 +176,10 @@ contract FinGovernor is
         return super._executor();
     }
 
+    /// @param proposalId The Id of a proposal
+    /// @param account The account of the voter
+    /// @param support The vote (0,1,2)
+    /// @param reason The voters reason for voting
     function _castVote(uint256 proposalId, address account, uint8 support, string memory reason)
         internal
         override(GovernorUpgradeable)

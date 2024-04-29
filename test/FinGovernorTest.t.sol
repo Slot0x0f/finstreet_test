@@ -38,8 +38,6 @@ contract FinGovernorTest is Test {
         vm.prank(VOTER);
         token.delegate(VOTER);
 
-        //timelock = new TimeLock(MIN_DELAY, proposers, executors);
-
         address payable proxyTimelock = payable(
             Upgrades.deployUUPSProxy(
                 "FinTimeLock.sol",
@@ -91,7 +89,7 @@ contract FinGovernorTest is Test {
 
         // 2. Vote
         string memory reason = "I like the number";
-  
+
         uint8 voteWay = 1;
 
         vm.prank(VOTER);
@@ -113,7 +111,6 @@ contract FinGovernorTest is Test {
 
         assert(box.getNumber() == valueToStore);
     }
-
 
     function testVoterGetsTokenForVoting(uint256 value, string memory description) public {
         uint256 valueToStore = value;
@@ -137,7 +134,7 @@ contract FinGovernorTest is Test {
 
         // 2. Vote
         string memory reason = "I like the number";
-  
+
         uint8 voteWay = 1;
 
         uint256 balanceOfVoterBefore = IERC20(address(token)).balanceOf(VOTER);
