@@ -24,7 +24,9 @@ contract Box is Ownable {
      * @notice Only the contract owner can call this function.
      */
     function store(uint256 newNumber) public onlyOwner {
-        s_number = newNumber;
+        assembly {
+            sstore(s_number.slot, newNumber)
+        }
         emit NumberChanged(newNumber);
     }
 
@@ -33,6 +35,10 @@ contract Box is Ownable {
      * @return The stored number.
      */
     function getNumber() external view returns (uint256) {
-        return s_number;
+        uint256 result;
+        assembly {
+            result := sload(s_number.slot)
+        }
+        return result;
     }
 }
