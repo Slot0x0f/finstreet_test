@@ -18,7 +18,7 @@ contract FinGovernorTest is Test {
 
     uint256 public constant MIN_DELAY = 3600; // 1 hour - after a vote passes, you have 1 hour before you can enact
     uint256 public constant QUORUM_PERCENTAGE = 4; // Need 4% of voters to pass
-    uint256 public constant VOTING_PERIOD = 50400; // This is how long voting lasts
+    uint256 public constant VOTING_PERIOD = 50400; // How long voting lasts
     uint256 public constant VOTING_DELAY = 1; // How many blocks till a proposal vote becomes active
 
     address[] proposers;

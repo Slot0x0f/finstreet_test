@@ -40,11 +40,11 @@ contract FinGovernor is
         initializer
     {
         __Governor_init("FinGovernor");
-        __GovernorSettings_init(1, /* 1 block */ 50400, /* 1 week */ 0);
+        __GovernorSettings_init(1,50400, 0); // 1 block voting delay, 1 week voting peiord
         __GovernorCountingSimple_init();
         __GovernorStorage_init();
         __GovernorVotes_init(_token);
-        __GovernorVotesQuorumFraction_init(4);
+        __GovernorVotesQuorumFraction_init(4); // % quorum required
         __GovernorTimelockControl_init(_timelock);
         __Ownable_init(initialOwner);
         __UUPSUpgradeable_init();
