@@ -51,13 +51,14 @@ contract FinGovernor is
         govtoken = address(_token);
     }
 
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     /*
     ==============================
     ====== Parent Functions ======
     ==============================
     */
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function votingDelay() public view override(GovernorUpgradeable, GovernorSettingsUpgradeable) returns (uint256) {
         return super.votingDelay();
