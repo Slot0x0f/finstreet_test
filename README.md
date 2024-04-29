@@ -25,6 +25,7 @@ $ forge build
 ### Test
 
 ```shell
+$ forge clean
 $ forge test
 ```
 
@@ -33,3 +34,11 @@ $ forge test
 ```shell
 $ forge fmt
 ```
+
+ **Contracts deployed to Base Chain at:**
+
+Fingovtoken : 0x91Ce6fEC501fc5e2dA8Ed6cB85603906ea4cd21F
+
+FinTimeLock: 0xd0A5fc1905D65775D43daACC99CFeaCe6b824c8c
+
+FinGovernor: 0x50c40C1C3e2265995601da446CD2b7Cf05146c66
